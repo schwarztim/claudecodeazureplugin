@@ -8,8 +8,16 @@ set -e
 # Get the plugin directory (parent of hooks/)
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# Source environment if .env exists
-if [ -f "$PLUGIN_DIR/.env" ]; then
+# Global config location (cross-platform)
+GLOBAL_CONFIG_DIR="$HOME/.claude/azure-openai"
+GLOBAL_ENV="$GLOBAL_CONFIG_DIR/.env"
+
+# Source environment from global config (preferred) or plugin dir (fallback)
+if [ -f "$GLOBAL_ENV" ]; then
+    set -a
+    source "$GLOBAL_ENV"
+    set +a
+elif [ -f "$PLUGIN_DIR/.env" ]; then
     set -a
     source "$PLUGIN_DIR/.env"
     set +a
@@ -23,8 +31,8 @@ if [ "$AUTO_START" != "true" ]; then
     exit 0
 fi
 
-# Check if .env is configured
-if [ ! -f "$PLUGIN_DIR/.env" ] || [ -z "$OPENAI_API_KEY" ]; then
+# Check if config is available (global or plugin dir)
+if [ -z "$OPENAI_API_KEY" ]; then
     # Not configured yet, skip silently
     exit 0
 fi

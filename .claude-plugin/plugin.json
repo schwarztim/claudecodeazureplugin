@@ -1,0 +1,15 @@
+{
+  "name": "azure-openai",
+  "version": "1.0.0",
+  "description": "Azure OpenAI integration for Claude Code - Use Azure OpenAI and other OpenAI-compatible providers with Claude Code",
+  "author": {
+    "name": "schwarztim",
+    "url": "https://github.com/schwarztim"
+  },
+  "homepage": "https://github.com/schwarztim/claude-code-azure-proxy",
+  "license": "MIT",
+  "keywords": ["azure", "openai", "provider", "proxy", "enterprise"],
+  "commands": "./commands/",
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
+}

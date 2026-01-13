@@ -1,3 +1,8 @@
+---
+name: azure-openai
+description: Manages Azure OpenAI proxy for Claude Code. Use when setting up, configuring, starting, stopping, or testing Azure OpenAI integration.
+---
+
 # Azure OpenAI Skill
 
 You are helping the user manage the Azure OpenAI proxy for Claude Code.
@@ -34,11 +39,19 @@ Parse the user's command to determine what action they want:
 - If "test": Test connection
 - If "config": Show configuration
 
-## Plugin Directory Location
+## Configuration Locations
 
-The plugin files are located in the directory containing this skill file. To get the plugin directory:
+**Global config (preferred):** `~/.claude/azure-openai/.env`
+- Persists across plugin updates and reinstalls
+- Cross-platform compatible (works on Linux, Mac, Windows)
 
+**Plugin directory (fallback):** `<plugin-dir>/.env`
+- Used for development or if global config doesn't exist
+
+To get paths in bash:
 ```bash
+GLOBAL_CONFIG_DIR="$HOME/.claude/azure-openai"
+GLOBAL_ENV="$GLOBAL_CONFIG_DIR/.env"
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ```
 
@@ -53,29 +66,33 @@ PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 ### For `/azure-openai setup`
 
-1. Check if `.env` file exists
-2. If not, copy from `.env.example`
-3. Guide user through configuration:
+1. Create global config directory if needed: `mkdir -p ~/.claude/azure-openai`
+2. Check if global config exists (`~/.claude/azure-openai/.env`)
+3. If migrating from plugin-local config, offer to migrate
+4. If starting fresh, copy template from plugin's `.env.example`
+5. Guide user through configuration:
    - Azure OpenAI API Key
    - Azure OpenAI Endpoint URL
    - API Version
    - Model deployments (BIG_MODEL, MIDDLE_MODEL, SMALL_MODEL)
    - Optional: Port, timeouts, token limits
-4. Validate the configuration
-5. Ask if they want to start the proxy now
+6. Write config to `~/.claude/azure-openai/.env`
+7. Validate the configuration
+8. Ask if they want to start the proxy now
 
 ### For `/azure-openai start`
 
 1. Get the plugin directory path
 2. Check if proxy is already running (check `.proxy.pid`)
 3. If already running, show message and exit
-4. Verify `.env` file exists and is configured
-5. Activate virtual environment
-6. Start the proxy using `start_proxy.py`
-7. Wait a moment and verify it started successfully
-8. Configure Claude Code to use the proxy:
+4. Verify config exists (check `~/.claude/azure-openai/.env` first, then plugin dir as fallback)
+5. If no config found, prompt user to run `/azure-openai setup`
+6. Activate virtual environment
+7. Start the proxy using `start_proxy.py`
+8. Wait a moment and verify it started successfully
+9. Configure Claude Code to use the proxy:
    - Set `ANTHROPIC_BASE_URL` in settings or show export command
-9. Show success message with next steps
+10. Show success message with next steps
 
 ### For `/azure-openai stop`
 
@@ -112,16 +129,18 @@ PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 ### For `/azure-openai config`
 
-1. Read and display current configuration from `.env`
-2. Mask sensitive values (API keys)
-3. Show which settings are configured vs. using defaults
-4. Offer to edit configuration
+1. Check for config in `~/.claude/azure-openai/.env` first, then plugin dir
+2. Read and display current configuration
+3. Show config location being used
+4. Mask sensitive values (API keys)
+5. Show which settings are configured vs. using defaults
+6. Offer to edit configuration
 
 ## Important Notes
 
-- Always use the plugin directory as the base path for all files
+- **Configuration** is stored in `~/.claude/azure-openai/.env` (global, persists across updates)
+- **Fallback config** in plugin directory `.env` (for development)
 - The proxy server runs from `start_proxy.py` in the plugin directory
-- Configuration is stored in `.env` in the plugin directory
 - The PID file is `.proxy.pid` in the plugin directory
 - Logs are in `proxy.log` in the plugin directory
 - Never expose API keys in output - always mask them
