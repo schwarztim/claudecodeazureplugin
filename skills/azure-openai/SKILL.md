@@ -1,3 +1,8 @@
+---
+name: azure-openai
+description: Manages Azure OpenAI proxy for Claude Code. Use when setting up, configuring, starting, stopping, or testing Azure OpenAI integration.
+---
+
 # Azure OpenAI Skill
 
 You are helping the user manage the Azure OpenAI proxy for Claude Code.
