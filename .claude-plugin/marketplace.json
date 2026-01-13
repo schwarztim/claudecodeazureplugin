@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "azure-openai",
-      "source": "..",
+      "source": ".",
       "description": "Azure OpenAI integration for Claude Code - Use Azure OpenAI and other OpenAI-compatible providers with Claude Code"
     }
   ]
