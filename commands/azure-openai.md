@@ -22,14 +22,19 @@ Based on `$ARGUMENTS`, determine the action:
 - "test": Test Azure OpenAI connection
 - "config": Show current configuration
 
-## Plugin Location
+## Configuration Location
 
-Find the plugin directory by locating the installed plugin:
+**Global config (preferred):** `~/.claude/azure-openai/.env`
+- Persists across plugin updates and reinstalls
+
+**Plugin directory (fallback):** `$HOME/.claude/plugins/azure-openai/.env`
+- Used for development or if global config doesn't exist
+
 ```bash
+GLOBAL_CONFIG_DIR="$HOME/.claude/azure-openai"
+GLOBAL_ENV="$GLOBAL_CONFIG_DIR/.env"
 PLUGIN_DIR="$HOME/.claude/plugins/azure-openai"
 ```
-
-If that doesn't exist, check for the local development path.
 
 ## Actions
 
@@ -40,25 +45,29 @@ Show:
 - Quick start guide if not configured
 
 ### setup
-1. Check for `.env` file in plugin directory
-2. If missing, copy from `.env.example`
-3. Guide user to set:
+1. Create global config directory: `mkdir -p ~/.claude/azure-openai`
+2. Check for existing config in `~/.claude/azure-openai/.env`
+3. If migrating from plugin-local `.env`, offer to migrate
+4. If starting fresh, use template from plugin's `.env.example`
+5. Guide user to set:
    - `OPENAI_API_KEY` - Azure OpenAI API key
    - `OPENAI_BASE_URL` - Azure endpoint (e.g., https://your-resource.openai.azure.com/)
    - `OPENAI_API_VERSION` - API version (default: 2024-08-01-preview)
    - `BIG_MODEL` - Model for Claude Opus (e.g., gpt-4)
    - `MIDDLE_MODEL` - Model for Claude Sonnet (e.g., gpt-4)
    - `SMALL_MODEL` - Model for Claude Haiku (e.g., gpt-35-turbo)
-4. Offer to start proxy after setup
+6. Write config to `~/.claude/azure-openai/.env`
+7. Offer to start proxy after setup
 
 ### start
-1. Check if already running (`.proxy.pid` file)
-2. Verify `.env` is configured
-3. Create venv if needed: `python3 -m venv venv`
-4. Install deps: `./venv/bin/pip install -r requirements.txt`
-5. Start proxy: `./venv/bin/python start_proxy.py &`
-6. Save PID to `.proxy.pid`
-7. Show success with `ANTHROPIC_BASE_URL=http://localhost:8082` export
+1. Check if already running (`.proxy.pid` file in plugin dir)
+2. Verify config exists (`~/.claude/azure-openai/.env` or plugin dir fallback)
+3. If no config, prompt user to run `/azure-openai setup`
+4. Create venv if needed: `python3 -m venv venv`
+5. Install deps: `./venv/bin/pip install -r requirements.txt`
+6. Start proxy: `./venv/bin/python start_proxy.py &`
+7. Save PID to `.proxy.pid`
+8. Show success with `ANTHROPIC_BASE_URL=http://localhost:8082` export
 
 ### stop
 1. Read PID from `.proxy.pid`
@@ -81,9 +90,10 @@ Show:
 3. Report results
 
 ### config
-1. Read `.env` file
-2. Display settings (mask API keys)
-3. Show which are configured vs defaults
+1. Check for config in `~/.claude/azure-openai/.env` first, then plugin dir
+2. Read config file and show which location is being used
+3. Display settings (mask API keys)
+4. Show which are configured vs defaults
 
 ## Response Format
 
