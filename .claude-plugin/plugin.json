@@ -9,6 +9,6 @@
   "homepage": "https://github.com/schwarztim/claude-code-azure-proxy",
   "license": "MIT",
   "keywords": ["azure", "openai", "provider", "proxy", "enterprise"],
-  "skills": "../skills/",
-  "hooks": "../hooks/hooks.json"
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
 }
