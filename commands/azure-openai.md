@@ -57,7 +57,11 @@ Show:
    - `MIDDLE_MODEL` - Model for Claude Sonnet (e.g., gpt-4)
    - `SMALL_MODEL` - Model for Claude Haiku (e.g., gpt-35-turbo)
 6. Write config to `~/.claude/azure-openai/.env`
-7. Offer to start proxy after setup
+7. **Auto-configure ANTHROPIC_BASE_URL** (cross-platform):
+   - Linux/Mac: Add to shell profile (~/.zshrc or ~/.bashrc)
+   - Windows: Use `setx ANTHROPIC_BASE_URL http://localhost:8082`
+   - Inform user to restart terminal after setup
+8. Offer to start proxy after setup
 
 ### start
 1. Check if already running (`.proxy.pid` file in plugin dir)

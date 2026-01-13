@@ -77,8 +77,15 @@ PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
    - Model deployments (BIG_MODEL, MIDDLE_MODEL, SMALL_MODEL)
    - Optional: Port, timeouts, token limits
 6. Write config to `~/.claude/azure-openai/.env`
-7. Validate the configuration
-8. Ask if they want to start the proxy now
+7. **Configure ANTHROPIC_BASE_URL automatically** (cross-platform):
+   - **Linux/Mac**: Add `export ANTHROPIC_BASE_URL="http://localhost:8082"` to shell profile (~/.zshrc or ~/.bashrc)
+   - **Windows**: Run `setx ANTHROPIC_BASE_URL http://localhost:8082`
+   - Check if already configured first to avoid duplicates
+   - Inform user to restart terminal or source the profile
+8. Validate the configuration
+9. Ask if they want to start the proxy now
+
+**Important**: The ANTHROPIC_BASE_URL configuration is a ONE-TIME setup that persists across sessions. Users only need to restart their terminal once after initial setup.
 
 ### For `/azure-openai start`
 
