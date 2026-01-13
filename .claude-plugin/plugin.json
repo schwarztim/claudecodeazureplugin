@@ -10,11 +10,11 @@
     {
       "name": "azure-openai",
       "description": "Manage Azure OpenAI proxy for Claude Code",
-      "prompt": "skills/azure-openai.md"
+      "prompt": "../skills/azure-openai.md"
     }
   ],
   "hooks": {
-    "sessionStart": "hooks/session-start.sh"
+    "sessionStart": "../hooks/session-start.sh"
   },
   "settings": {
     "azureOpenAI": {
